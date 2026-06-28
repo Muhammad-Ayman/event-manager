@@ -1,10 +1,10 @@
 <%- include('partials/header') %>
 
-<div class="error-page">
-    <div class="error-icon">⚠️</div>
-    <h1><%= title %></h1>
-    <p class="error-message"><%= message %></p>
-    <a href="<%= backUrl %>" class="btn btn-secondary">← Go Back</a>
+<div class="text-center py-16 px-4">
+    <div class="text-5xl mb-4">⚠️</div>
+    <h1 class="text-3xl font-bold mb-3"><%= title %></h1>
+    <p class="text-slate-500 mb-8"><%= message %></p>
+    <a href="<%= backUrl %>" class="inline-flex items-center gap-1.5 px-5 py-2 rounded-lg text-sm font-semibold border-none cursor-pointer no-underline whitespace-nowrap transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md active:translate-y-0 bg-sky-500 text-white hover:bg-sky-700">← Go Back</a>
 </div>
 
 <%- include('partials/footer') %>

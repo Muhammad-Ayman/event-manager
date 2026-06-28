@@ -1,84 +1,81 @@
 <%- include('../partials/header') %>
 
-<div class="page-header">
+<div class="flex items-start justify-between flex-wrap gap-4 mb-8 pb-5 border-b-2 border-slate-200">
     <div>
-        <h1>Bookings – <%= event.title %></h1>
-        <p class="page-subtitle text-muted">
-            Event date: <strong><%= formatDate(event.event_date, 'dd/MM/yyyy, HH:mm') %></strong>
+        <h1 class="text-2xl font-bold">Bookings – <%= event.title %></h1>
+        <p class="mt-1 text-sm text-slate-500">
+            Event date: <strong class="text-slate-800"><%= formatDate(event.event_date, 'dd/MM/yyyy, HH:mm') %></strong>
         </p>
     </div>
-    <a href="/organiser" class="btn btn-outline">← Back to Organiser Home</a>
+    <a href="/organiser" class="inline-flex items-center gap-1.5 px-5 py-2 rounded-lg text-sm font-semibold cursor-pointer no-underline whitespace-nowrap transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md bg-transparent text-indigo-600 border-2 border-indigo-600 hover:bg-indigo-50">← Back to Organiser Home</a>
 </div>
 
-<!-- Summary cards -->
-<div class="stats-row">
-    <div class="stat-card">
-        <div class="stat-number"><%= bookings.length %></div>
-        <div class="stat-label">Total Bookings</div>
+<div class="grid grid-cols-4 gap-4 mb-8">
+    <div class="bg-white border border-slate-200 rounded-lg p-5 text-center shadow-sm">
+        <div class="text-3xl font-extrabold text-indigo-600"><%= bookings.length %></div>
+        <div class="text-xs text-slate-500 mt-1 uppercase tracking-wider">Total Bookings</div>
     </div>
-    <div class="stat-card">
-        <div class="stat-number"><%= totalFull %></div>
-        <div class="stat-label">Full-Price Tickets Sold</div>
+    <div class="bg-white border border-slate-200 rounded-lg p-5 text-center shadow-sm">
+        <div class="text-3xl font-extrabold text-indigo-600"><%= totalFull %></div>
+        <div class="text-xs text-slate-500 mt-1 uppercase tracking-wider">Full-Price Tickets Sold</div>
     </div>
-    <div class="stat-card">
-        <div class="stat-number"><%= totalConcession %></div>
-        <div class="stat-label">Concession Tickets Sold</div>
+    <div class="bg-white border border-slate-200 rounded-lg p-5 text-center shadow-sm">
+        <div class="text-3xl font-extrabold text-indigo-600"><%= totalConcession %></div>
+        <div class="text-xs text-slate-500 mt-1 uppercase tracking-wider">Concession Tickets Sold</div>
     </div>
-    <div class="stat-card stat-card--revenue">
-        <div class="stat-number">£<%= totalRevenue.toFixed(2) %></div>
-        <div class="stat-label">Estimated Revenue</div>
+    <div class="bg-white border border-green-500 rounded-lg p-5 text-center shadow-sm bg-green-50">
+        <div class="text-3xl font-extrabold text-green-500">£<%= totalRevenue.toFixed(2) %></div>
+        <div class="text-xs text-slate-500 mt-1 uppercase tracking-wider">Estimated Revenue</div>
     </div>
 </div>
 
-<!-- Capacity bars -->
-<div class="capacity-section">
-    <h3>Capacity</h3>
-    <div class="capacity-row">
-        <span class="capacity-label">Full-Price (<%= totalFull %> / <%= event.full_price_tickets %>)</span>
-        <div class="progress-bar">
-            <div class="progress-fill" style="width: <%= event.full_price_tickets > 0 ? Math.round((totalFull / event.full_price_tickets) * 100) : 0 %>%"></div>
+<div class="bg-white border border-slate-200 rounded-lg p-6 mb-8 shadow-sm">
+    <h3 class="mb-4 text-base font-bold">Capacity</h3>
+    <div class="flex items-center gap-4 mb-3">
+        <span class="text-sm text-slate-500 min-w-[200px] whitespace-nowrap">Full-Price (<%= totalFull %> / <%= event.full_price_tickets %>)</span>
+        <div class="flex-1 h-3 bg-slate-200 rounded-full overflow-hidden">
+            <div class="h-full bg-indigo-600 rounded-full transition-all duration-500" style="width: <%= event.full_price_tickets > 0 ? Math.round((totalFull / event.full_price_tickets) * 100) : 0 %>%"></div>
         </div>
-        <span class="capacity-pct"><%= event.full_price_tickets > 0 ? Math.round((totalFull / event.full_price_tickets) * 100) : 0 %>%</span>
+        <span class="text-sm text-slate-500 min-w-[38px] text-right"><%= event.full_price_tickets > 0 ? Math.round((totalFull / event.full_price_tickets) * 100) : 0 %>%</span>
     </div>
-    <div class="capacity-row">
-        <span class="capacity-label">Concession (<%= totalConcession %> / <%= event.concession_tickets %>)</span>
-        <div class="progress-bar">
-            <div class="progress-fill progress-fill--concession" style="width: <%= event.concession_tickets > 0 ? Math.round((totalConcession / event.concession_tickets) * 100) : 0 %>%"></div>
+    <div class="flex items-center gap-4 mb-3">
+        <span class="text-sm text-slate-500 min-w-[200px] whitespace-nowrap">Concession (<%= totalConcession %> / <%= event.concession_tickets %>)</span>
+        <div class="flex-1 h-3 bg-slate-200 rounded-full overflow-hidden">
+            <div class="h-full bg-amber-500 rounded-full transition-all duration-500" style="width: <%= event.concession_tickets > 0 ? Math.round((totalConcession / event.concession_tickets) * 100) : 0 %>%"></div>
         </div>
-        <span class="capacity-pct"><%= event.concession_tickets > 0 ? Math.round((totalConcession / event.concession_tickets) * 100) : 0 %>%</span>
+        <span class="text-sm text-slate-500 min-w-[38px] text-right"><%= event.concession_tickets > 0 ? Math.round((totalConcession / event.concession_tickets) * 100) : 0 %>%</span>
     </div>
 </div>
 
-<!-- Bookings list -->
-<section class="section">
-    <h2 class="section-title">All Bookings</h2>
+<section class="mb-10">
+    <h2 class="text-xl font-bold mb-4 flex items-center gap-2">All Bookings</h2>
 
     <% if (bookings.length === 0) { %>
-        <div class="empty-state">
+        <div class="bg-white border-2 border-dashed border-slate-200 rounded-lg p-8 text-center text-slate-500">
             <p>No bookings yet for this event.</p>
         </div>
     <% } else { %>
-        <div class="event-table-wrapper">
-            <table class="event-table">
+        <div class="overflow-x-auto rounded-lg border border-slate-200 bg-white shadow-sm">
+            <table class="w-full border-collapse text-sm">
                 <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Attendee Name</th>
-                        <th>Full-Price Tickets</th>
-                        <th>Concession Tickets</th>
-                        <th>Amount Paid</th>
-                        <th>Booked At</th>
+                    <tr class="bg-slate-100 text-left">
+                        <th class="px-4 py-3 font-semibold text-xs uppercase tracking-wider text-slate-500 border-b border-slate-200 whitespace-nowrap">#</th>
+                        <th class="px-4 py-3 font-semibold text-xs uppercase tracking-wider text-slate-500 border-b border-slate-200 whitespace-nowrap">Attendee Name</th>
+                        <th class="px-4 py-3 font-semibold text-xs uppercase tracking-wider text-slate-500 border-b border-slate-200 whitespace-nowrap">Full-Price Tickets</th>
+                        <th class="px-4 py-3 font-semibold text-xs uppercase tracking-wider text-slate-500 border-b border-slate-200 whitespace-nowrap">Concession Tickets</th>
+                        <th class="px-4 py-3 font-semibold text-xs uppercase tracking-wider text-slate-500 border-b border-slate-200 whitespace-nowrap">Amount Paid</th>
+                        <th class="px-4 py-3 font-semibold text-xs uppercase tracking-wider text-slate-500 border-b border-slate-200 whitespace-nowrap">Booked At</th>
                     </tr>
                 </thead>
                 <tbody>
                 <% bookings.forEach((b, i) => { %>
-                    <tr>
-                        <td class="text-muted"><%= i + 1 %></td>
-                        <td><strong><%= b.attendee_name %></strong></td>
-                        <td><%= b.full_price_tickets %></td>
-                        <td><%= b.concession_tickets %></td>
-                        <td>£<%= ((b.full_price_tickets * event.full_price_cost) + (b.concession_tickets * event.concession_cost)).toFixed(2) %></td>
-                        <td class="date-small"><%= formatDate(b.booked_at, 'dd/MM/yyyy, HH:mm') %></td>
+                    <tr class="hover:bg-slate-50">
+                        <td class="px-4 py-3 border-b border-slate-200 text-slate-500"><%= i + 1 %></td>
+                        <td class="px-4 py-3 border-b border-slate-200"><strong><%= b.attendee_name %></strong></td>
+                        <td class="px-4 py-3 border-b border-slate-200"><%= b.full_price_tickets %></td>
+                        <td class="px-4 py-3 border-b border-slate-200"><%= b.concession_tickets %></td>
+                        <td class="px-4 py-3 border-b border-slate-200">£<%= ((b.full_price_tickets * event.full_price_cost) + (b.concession_tickets * event.concession_cost)).toFixed(2) %></td>
+                        <td class="px-4 py-3 border-b border-slate-200 text-xs text-slate-500 whitespace-nowrap"><%= formatDate(b.booked_at, 'dd/MM/yyyy, HH:mm') %></td>
                     </tr>
                 <% }); %>
                 </tbody>

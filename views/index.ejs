@@ -1,23 +1,23 @@
 <%- include('partials/header') %>
 
-<div class="hero">
-    <div class="hero-icon">🎟</div>
-    <h1>Welcome to Event Manager</h1>
-    <p class="hero-subtitle">Create and manage events, or browse and book your next experience.</p>
+<div class="text-center py-16 px-4">
+    <div class="text-5xl mb-4">🎟</div>
+    <h1 class="text-4xl font-extrabold mb-3">Welcome to Event Manager</h1>
+    <p class="text-lg text-slate-500 mb-10">Create and manage events, or browse and book your next experience.</p>
 
-    <div class="hero-cards">
-        <a href="/organiser" class="hero-card hero-card--organiser">
-            <div class="hero-card-icon">🗂</div>
-            <h2>Organiser</h2>
-            <p>Create, edit, and publish events. Manage your site settings and view bookings.</p>
-            <span class="btn btn-primary">Go to Organiser →</span>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto">
+        <a href="/organiser" class="bg-white border-2 border-slate-200 rounded-2xl p-8 text-left flex flex-col gap-3 shadow-sm hover:-translate-y-1 hover:shadow-lg hover:border-indigo-600 transition-all duration-200 text-slate-800 no-underline">
+            <div class="text-3xl">🗂</div>
+            <h2 class="text-xl font-bold">Organiser</h2>
+            <p class="text-sm text-slate-500 flex-1">Create, edit, and publish events. Manage your site settings and view bookings.</p>
+            <span class="inline-flex items-center gap-1.5 px-5 py-2 rounded-lg text-sm font-semibold border-none cursor-pointer no-underline whitespace-nowrap transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md active:translate-y-0 bg-indigo-600 text-white hover:bg-indigo-800 w-fit">Go to Organiser →</span>
         </a>
 
-        <a href="/attendee" class="hero-card hero-card--attendee">
-            <div class="hero-card-icon">🙋</div>
-            <h2>Attendee</h2>
-            <p>Browse upcoming events and book your tickets.</p>
-            <span class="btn btn-secondary">Browse Events →</span>
+        <a href="/attendee" class="bg-white border-2 border-slate-200 rounded-2xl p-8 text-left flex flex-col gap-3 shadow-sm hover:-translate-y-1 hover:shadow-lg hover:border-indigo-600 transition-all duration-200 text-slate-800 no-underline">
+            <div class="text-3xl">🙋</div>
+            <h2 class="text-xl font-bold">Attendee</h2>
+            <p class="text-sm text-slate-500 flex-1">Browse upcoming events and book your tickets.</p>
+            <span class="inline-flex items-center gap-1.5 px-5 py-2 rounded-lg text-sm font-semibold border-none cursor-pointer no-underline whitespace-nowrap transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md active:translate-y-0 bg-sky-500 text-white hover:bg-sky-700 w-fit">Browse Events →</span>
         </a>
     </div>
 </div>

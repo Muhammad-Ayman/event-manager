@@ -1,49 +1,49 @@
 <%- include('../partials/header') %>
 
-<div class="confirmation-page">
-    <div class="confirmation-icon">🎉</div>
-    <h1>Booking Confirmed!</h1>
-    <p class="confirmation-subtitle">Your tickets have been booked successfully.</p>
+<div class="text-center py-12 px-4 max-w-lg mx-auto">
+    <div class="text-6xl mb-4">🎉</div>
+    <h1 class="text-3xl font-extrabold mb-2">Booking Confirmed!</h1>
+    <p class="text-slate-500 mb-8 text-base">Your tickets have been booked successfully.</p>
 
-    <div class="confirmation-card">
-        <h2><%= booking.event_title %></h2>
-        <p class="conf-date">📅 <%= formatDate(booking.event_date, 'EEEE, d MMMM yyyy, HH:mm') %></p>
+    <div class="bg-white border border-slate-200 rounded-2xl p-8 text-left shadow-sm mb-8">
+        <h2 class="text-xl font-bold mb-1"><%= booking.event_title %></h2>
+        <p class="text-slate-500 mb-5 text-sm">📅 <%= formatDate(booking.event_date, 'EEEE, d MMMM yyyy, HH:mm') %></p>
 
-        <div class="conf-details">
-            <div class="conf-row">
-                <span>Attendee</span>
+        <div class="flex flex-col gap-2">
+            <div class="flex justify-between items-center text-sm py-2 border-b border-slate-200">
+                <span class="text-slate-500">Attendee</span>
                 <strong><%= booking.attendee_name %></strong>
             </div>
             <% if (booking.full_price_tickets > 0) { %>
-            <div class="conf-row">
-                <span>Full-Price Tickets</span>
+            <div class="flex justify-between items-center text-sm py-2 border-b border-slate-200">
+                <span class="text-slate-500">Full-Price Tickets</span>
                 <strong><%= booking.full_price_tickets %> × £<%= parseFloat(booking.full_price_cost).toFixed(2) %></strong>
             </div>
             <% } %>
             <% if (booking.concession_tickets > 0) { %>
-            <div class="conf-row">
-                <span>Concession Tickets</span>
+            <div class="flex justify-between items-center text-sm py-2 border-b border-slate-200">
+                <span class="text-slate-500">Concession Tickets</span>
                 <strong><%= booking.concession_tickets %> × £<%= parseFloat(booking.concession_cost).toFixed(2) %></strong>
             </div>
             <% } %>
-            <div class="conf-row conf-row--total">
-                <span>Total</span>
-                <strong>£<%= total.toFixed(2) %></strong>
+            <div class="flex justify-between items-center py-2 border-b border-slate-200 text-base">
+                <span class="text-slate-500">Total</span>
+                <strong class="text-indigo-600 text-xl">£<%= total.toFixed(2) %></strong>
             </div>
-            <div class="conf-row">
-                <span>Booking Reference</span>
+            <div class="flex justify-between items-center text-sm py-2 border-b border-slate-200">
+                <span class="text-slate-500">Booking Reference</span>
                 <strong>#<%= booking.id.toString().padStart(6, '0') %></strong>
             </div>
-            <div class="conf-row">
-                <span>Booked At</span>
+            <div class="flex justify-between items-center text-sm py-2">
+                <span class="text-slate-500">Booked At</span>
                 <strong><%= formatDate(booking.booked_at, 'dd/MM/yyyy, HH:mm') %></strong>
             </div>
         </div>
     </div>
 
-    <div class="confirmation-actions">
-        <a href="/attendee" class="btn btn-primary">← Browse More Events</a>
-        <a href="/attendee/events/<%= booking.event_id %>" class="btn btn-outline">View Event</a>
+    <div class="flex gap-4 justify-center flex-wrap">
+        <a href="/attendee" class="inline-flex items-center gap-1.5 px-5 py-2 rounded-lg text-sm font-semibold border-none cursor-pointer no-underline whitespace-nowrap transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md active:translate-y-0 bg-indigo-600 text-white hover:bg-indigo-800">← Browse More Events</a>
+        <a href="/attendee/events/<%= booking.event_id %>" class="inline-flex items-center gap-1.5 px-5 py-2 rounded-lg text-sm font-semibold border-none cursor-pointer no-underline whitespace-nowrap transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md active:translate-y-0 bg-transparent text-indigo-600 border-2 border-indigo-600 hover:bg-indigo-50">View Event</a>
     </div>
 </div>
 
