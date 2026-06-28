@@ -1,0 +1,25 @@
+<%- include('partials/header') %>
+
+<div class="hero">
+    <div class="hero-icon">🎟</div>
+    <h1>Welcome to Event Manager</h1>
+    <p class="hero-subtitle">Create and manage events, or browse and book your next experience.</p>
+
+    <div class="hero-cards">
+        <a href="/organiser" class="hero-card hero-card--organiser">
+            <div class="hero-card-icon">🗂</div>
+            <h2>Organiser</h2>
+            <p>Create, edit, and publish events. Manage your site settings and view bookings.</p>
+            <span class="btn btn-primary">Go to Organiser →</span>
+        </a>
+
+        <a href="/attendee" class="hero-card hero-card--attendee">
+            <div class="hero-card-icon">🙋</div>
+            <h2>Attendee</h2>
+            <p>Browse upcoming events and book your tickets.</p>
+            <span class="btn btn-secondary">Browse Events →</span>
+        </a>
+    </div>
+</div>
+
+<%- include('partials/footer') %>

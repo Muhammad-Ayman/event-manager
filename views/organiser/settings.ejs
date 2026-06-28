@@ -1,0 +1,54 @@
+<%- include('../partials/header') %>
+
+<div class="page-header">
+    <h1>Site Settings</h1>
+    <a href="/organiser" class="btn btn-outline">← Back to Organiser Home</a>
+</div>
+
+<div class="form-card">
+    <% if (errors.length > 0) { %>
+        <div class="alert alert-error">
+            <ul>
+                <% errors.forEach(err => { %>
+                    <li><%= err %></li>
+                <% }); %>
+            </ul>
+        </div>
+    <% } %>
+
+    <form action="/organiser/settings" method="POST" novalidate>
+        <div class="form-group">
+            <label for="name">Site / Organisation Name <span class="required">*</span></label>
+            <input
+                type="text"
+                id="name"
+                name="name"
+                class="form-input"
+                value="<%= settings.name %>"
+                placeholder="e.g. Stretch Yoga"
+                required
+            />
+            <small class="form-hint">This is the name shown to attendees on the public site.</small>
+        </div>
+
+        <div class="form-group">
+            <label for="description">Site Description <span class="required">*</span></label>
+            <textarea
+                id="description"
+                name="description"
+                class="form-input"
+                rows="4"
+                placeholder="e.g. Yoga classes for all ages and abilities"
+                required
+            ><%= settings.description %></textarea>
+            <small class="form-hint">A short description of what your organisation does.</small>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">💾 Save Settings</button>
+            <a href="/organiser" class="btn btn-outline">Cancel</a>
+        </div>
+    </form>
+</div>
+
+<%- include('../partials/footer') %>

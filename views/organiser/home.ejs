@@ -1,0 +1,131 @@
+<%- include('../partials/header') %>
+
+<div class="page-header">
+    <div>
+        <h1>Organiser Home Page</h1>
+        <p class="page-subtitle"><strong><%= settings.name %></strong> – <%= settings.description %></p>
+    </div>
+    <div class="page-header-actions">
+        <a href="/organiser/settings" class="btn btn-outline">⚙️ Site Settings</a>
+        <form action="/organiser/events/new" method="POST" style="display:inline;">
+            <button type="submit" class="btn btn-primary">+ Create New Event</button>
+        </form>
+    </div>
+</div>
+
+<!-- ── Published Events ──────────────────────────────────── -->
+<section class="section">
+    <h2 class="section-title">📢 Published Events <span class="badge badge-green"><%= publishedEvents.length %></span></h2>
+
+    <% if (publishedEvents.length === 0) { %>
+        <div class="empty-state">
+            <p>No published events yet. Publish a draft to make it visible to attendees.</p>
+        </div>
+    <% } else { %>
+        <div class="event-table-wrapper">
+            <table class="event-table">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Event Date</th>
+                        <th>Created</th>
+                        <th>Published</th>
+                        <th>Full Tickets</th>
+                        <th>Concession Tickets</th>
+                        <th>Sharing Link</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <% publishedEvents.forEach(event => { %>
+                    <tr>
+                        <td><strong><%= event.title %></strong></td>
+                        <td><%= event.event_date ? new Date(event.event_date).toLocaleDateString('en-GB', {day:'numeric',month:'short',year:'numeric'}) : '—' %></td>
+                        <td class="date-small"><%= new Date(event.created_at).toLocaleDateString('en-GB') %></td>
+                        <td class="date-small"><%= event.published_at ? new Date(event.published_at).toLocaleDateString('en-GB') : '—' %></td>
+                        <td>
+                            <span class="ticket-info">
+                                <%= event.booked_full %> / <%= event.full_price_tickets %> booked
+                                <small>(£<%= parseFloat(event.full_price_cost).toFixed(2) %>)</small>
+                            </span>
+                        </td>
+                        <td>
+                            <span class="ticket-info">
+                                <%= event.booked_concession %> / <%= event.concession_tickets %> booked
+                                <small>(£<%= parseFloat(event.concession_cost).toFixed(2) %>)</small>
+                            </span>
+                        </td>
+                        <td>
+                            <a href="/attendee/events/<%= event.id %>" class="sharing-link" target="_blank" title="Attendee link">
+                                🔗 /attendee/events/<%= event.id %>
+                            </a>
+                        </td>
+                        <td class="actions-cell">
+                            <a href="/organiser/events/<%= event.id %>/bookings" class="btn btn-sm btn-outline">📋 Bookings</a>
+                            <form action="/organiser/events/<%= event.id %>/delete" method="POST" onsubmit="return confirm('Delete this event and all its bookings?');">
+                                <button type="submit" class="btn btn-sm btn-danger">🗑 Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                <% }); %>
+                </tbody>
+            </table>
+        </div>
+    <% } %>
+</section>
+
+<!-- ── Draft Events ──────────────────────────────────────── -->
+<section class="section">
+    <h2 class="section-title">📝 Draft Events <span class="badge badge-orange"><%= draftEvents.length %></span></h2>
+
+    <% if (draftEvents.length === 0) { %>
+        <div class="empty-state">
+            <p>No draft events. Click <strong>+ Create New Event</strong> to get started.</p>
+        </div>
+    <% } else { %>
+        <div class="event-table-wrapper">
+            <table class="event-table">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Event Date</th>
+                        <th>Created</th>
+                        <th>Last Modified</th>
+                        <th>Full Tickets</th>
+                        <th>Concession Tickets</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <% draftEvents.forEach(event => { %>
+                    <tr>
+                        <td><strong><%= event.title %></strong></td>
+                        <td><%= event.event_date ? new Date(event.event_date).toLocaleDateString('en-GB', {day:'numeric',month:'short',year:'numeric'}) : '—' %></td>
+                        <td class="date-small"><%= new Date(event.created_at).toLocaleDateString('en-GB') %></td>
+                        <td class="date-small"><%= new Date(event.last_modified).toLocaleDateString('en-GB') %></td>
+                        <td>
+                            <%= event.full_price_tickets %> available
+                            <small>(£<%= parseFloat(event.full_price_cost).toFixed(2) %>)</small>
+                        </td>
+                        <td>
+                            <%= event.concession_tickets %> available
+                            <small>(£<%= parseFloat(event.concession_cost).toFixed(2) %>)</small>
+                        </td>
+                        <td class="actions-cell">
+                            <a href="/organiser/events/<%= event.id %>/edit" class="btn btn-sm btn-outline">✏️ Edit</a>
+                            <form action="/organiser/events/<%= event.id %>/publish" method="POST" style="display:inline;">
+                                <button type="submit" class="btn btn-sm btn-green">📢 Publish</button>
+                            </form>
+                            <form action="/organiser/events/<%= event.id %>/delete" method="POST" onsubmit="return confirm('Delete this draft event?');" style="display:inline;">
+                                <button type="submit" class="btn btn-sm btn-danger">🗑 Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                <% }); %>
+                </tbody>
+            </table>
+        </div>
+    <% } %>
+</section>
+
+<%- include('../partials/footer') %>

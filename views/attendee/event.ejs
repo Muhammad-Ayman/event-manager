@@ -1,0 +1,135 @@
+<%- include('../partials/header') %>
+
+<div class="page-header">
+    <h1>Attendee Event Page</h1>
+    <a href="/attendee" class="btn btn-outline">← Back to Events</a>
+</div>
+
+<!-- Event details -->
+<div class="event-detail-card">
+    <h2 class="event-detail-title"><%= event.title %></h2>
+    <div class="event-detail-meta">
+        <span>📅 <%= new Date(event.event_date).toLocaleString('en-GB', {weekday:'long', day:'numeric', month:'long', year:'numeric', hour:'2-digit', minute:'2-digit'}) %></span>
+    </div>
+    <p class="event-detail-desc"><%= event.description %></p>
+
+    <div class="ticket-types">
+        <div class="ticket-type-card">
+            <div class="ticket-type-name">Full-Price Ticket</div>
+            <div class="ticket-type-price">£<%= parseFloat(event.full_price_cost).toFixed(2) %></div>
+            <div class="ticket-type-avail"><%= availableFull %> available</div>
+        </div>
+        <div class="ticket-type-card">
+            <div class="ticket-type-name">Concession Ticket</div>
+            <div class="ticket-type-price">£<%= parseFloat(event.concession_cost).toFixed(2) %></div>
+            <div class="ticket-type-avail"><%= availableConcession %> available</div>
+        </div>
+    </div>
+</div>
+
+<!-- Booking form -->
+<div class="form-card">
+    <h3>Book Tickets</h3>
+
+    <% if (errors.length > 0) { %>
+        <div class="alert alert-error">
+            <ul>
+                <% errors.forEach(err => { %>
+                    <li><%= err %></li>
+                <% }); %>
+            </ul>
+        </div>
+    <% } %>
+
+    <% if (availableFull === 0 && availableConcession === 0) { %>
+        <div class="alert alert-warning">
+            <strong>Sold Out!</strong> There are no tickets remaining for this event.
+        </div>
+    <% } else { %>
+        <form action="/attendee/events/<%= event.id %>/book" method="POST" novalidate id="bookingForm">
+
+            <div class="form-group">
+                <label for="attendee_name">Your Name <span class="required">*</span></label>
+                <input
+                    type="text"
+                    id="attendee_name"
+                    name="attendee_name"
+                    class="form-input"
+                    placeholder="Enter your full name"
+                    required
+                />
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="full_price_qty">
+                        Full-Price Tickets
+                        <span class="badge badge-green"><%= availableFull %> left</span>
+                    </label>
+                    <input
+                        type="number"
+                        id="full_price_qty"
+                        name="full_price_qty"
+                        class="form-input"
+                        value="0"
+                        min="0"
+                        max="<%= availableFull %>"
+                        oninput="updateTotal()"
+                    />
+                    <small class="form-hint">£<%= parseFloat(event.full_price_cost).toFixed(2) %> each</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="concession_qty">
+                        Concession Tickets
+                        <span class="badge badge-orange"><%= availableConcession %> left</span>
+                    </label>
+                    <input
+                        type="number"
+                        id="concession_qty"
+                        name="concession_qty"
+                        class="form-input"
+                        value="0"
+                        min="0"
+                        max="<%= availableConcession %>"
+                        oninput="updateTotal()"
+                    />
+                    <small class="form-hint">£<%= parseFloat(event.concession_cost).toFixed(2) %> each</small>
+                </div>
+            </div>
+
+            <!-- Dynamic total -->
+            <div class="booking-total" id="bookingTotal" style="display:none;">
+                <span>Estimated Total:</span>
+                <strong id="totalAmount">£0.00</strong>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary btn-large">🎟 Book Now</button>
+            </div>
+        </form>
+    <% } %>
+</div>
+
+<script>
+    const fullPrice = <%= parseFloat(event.full_price_cost) %>;
+    const concPrice = <%= parseFloat(event.concession_cost) %>;
+
+    function updateTotal() {
+        const fullQty = parseInt(document.getElementById('full_price_qty').value) || 0;
+        const concQty = parseInt(document.getElementById('concession_qty').value)  || 0;
+        const total   = (fullQty * fullPrice) + (concQty * concPrice);
+
+        const totalEl = document.getElementById('bookingTotal');
+        const amountEl = document.getElementById('totalAmount');
+
+        if (fullQty > 0 || concQty > 0) {
+            totalEl.style.display = 'flex';
+            amountEl.textContent  = '£' + total.toFixed(2);
+        } else {
+            totalEl.style.display = 'none';
+        }
+    }
+</script>
+
+<%- include('../partials/footer') %>

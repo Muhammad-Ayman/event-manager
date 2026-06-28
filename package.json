@@ -1,0 +1,17 @@
+{
+  "name": "event-manager",
+  "version": "1.0.0",
+  "description": "CM2040 DNW Coursework - Event Manager",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "build-db": "node db/build_db.js",
+    "build-db-win": "node db/build_db.js"
+  },
+  "dependencies": {
+    "date-fns": "^3.6.0",
+    "ejs": "^3.1.10",
+    "express": "^4.18.2",
+    "sqlite3": "^5.1.7"
+  }
+}
