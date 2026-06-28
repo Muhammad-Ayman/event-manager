@@ -1,45 +1,36 @@
-# Event Manager – CM2040 DNW Coursework
+## Event Manager ##
+### CM2040 Database Networks and the Web ###
 
-A deployable event manager built with Node.js, Express, EJS, and SQLite.
+#### Setup Instructions ####
 
-## Setup & Running
-
-Requires Node.js ≥ 16.x and npm ≥ 8.x.
-
-```bash
+1. Install dependencies:
+```
 npm install
+```
+
+2. Build the database (Mac/Linux):
+```
 npm run build-db
+```
+   Or on Windows:
+```
+npm run build-db-win
+```
+
+3. Start the server:
+```
 npm run start
 ```
 
-Then open **http://localhost:3000** in your browser.
+4. Open your browser at: http://localhost:3000
 
-## Pages
+#### Additional Libraries ####
 
-| URL | Description |
-|-----|-------------|
-| `http://localhost:3000/` | Main home page |
-| `http://localhost:3000/organiser` | Organiser home page |
-| `http://localhost:3000/organiser/settings` | Site settings |
-| `http://localhost:3000/attendee` | Attendee home page |
+- **joi** `^17.13.1` — Server-side form validation with detailed error messages. Used in `routes/validation.js` to validate all form submissions (settings, event creation/editing, ticket booking).
+- **Tailwind CSS** `v3 via CDN` — Utility-first CSS framework loaded from `https://cdn.tailwindcss.com`. No build step is required; classes are applied directly in EJS templates. No bundler is used.
+- **body-parser** `^1.20.2` — Parses URL-encoded form bodies (included in the original template).
 
-## Additional Libraries
+#### Notes ####
 
-| Library | Version | Purpose |
-|---------|---------|---------|
-| `ejs` | ^3.1.10 | Server-side HTML templating |
-| `express` | ^4.18.2 | Web server framework |
-| `sqlite3` | ^5.1.7 | SQLite database driver |
-| `date-fns` | ^3.6.0 | Date formatting utilities |
-
-No bundler is used. All CSS is plain CSS served as a static file from `/public/css/style.css`.
-
-## Extension
-
-The extension adds:
-
-1. **Booking confirmation page** – after an attendee books tickets, they are redirected to a confirmation page showing a booking reference, itemised ticket summary, and total cost.
-
-2. **Bookings management view** – accessible via the "📋 Bookings" button on any published event in the organiser home page. Shows: a summary of total bookings, full-price and concession tickets sold, estimated revenue, visual capacity progress bars, and a detailed table of every individual booking with attendee name, ticket quantities, amount paid, and booking timestamp.
-
-These features are server-side rendered using EJS and SQLite queries (JOIN across `events` and `bookings` tables), demonstrating three-tier architecture as taught in the course.
+- SQLite requires the `sqlite3` command-line tool to be installed for `npm run build-db`.
+- Tailwind is loaded via CDN so no compilation or build script is needed beyond `npm install` and `npm run build-db`.

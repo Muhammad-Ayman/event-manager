@@ -1,0 +1,10 @@
+/* main.css — Event Manager */
+/* Tailwind CDN handles all utility classes.
+   This file holds only minor custom overrides. */
+
+/* Smooth anchor transitions */
+a { transition: color 0.15s, opacity 0.15s; }
+
+/* Remove default number input spinners for cleaner look */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button { opacity: 1; }

@@ -4,21 +4,21 @@
   "description": "CM2040 DNW Coursework - Event Manager",
   "main": "index.js",
   "scripts": {
-    "start": "npm run build:css && node index.js",
-    "build:css": "npx tailwindcss -i public/css/tailwind.src.css -o public/css/style.css",
-    "build-db": "node db/build_db.js",
-    "build-db-win": "node db/build_db.js"
+    "start": "node index.js",
+    "build-db": "cat db_schema.sql | sqlite3 database.db",
+    "build-db-win": "sqlite3 database.db < db_schema.sql",
+    "clean-db": "rm database.db",
+    "clean-db-win": "del database.db"
   },
   "dependencies": {
-    "date-fns": "^3.6.0",
-    "ejs": "^3.1.10",
+    "body-parser": "^1.20.2",
+    "ejs": "^3.1.8",
     "express": "^4.18.2",
-    "joi": "^18.2.3",
-    "sqlite3": "^5.1.7"
+    "joi": "^17.13.1",
+    "sqlite3": "^5.1.2"
   },
-  "devDependencies": {
-    "autoprefixer": "^10.5.2",
-    "postcss": "^8.5.15",
-    "tailwindcss": "^3.4.19"
+  "engines": {
+    "npm": ">=8.0.0",
+    "node": ">=16.0.0"
   }
 }

@@ -1,110 +1,97 @@
 <%- include('../partials/header') %>
 
-<div class="flex items-start justify-between flex-wrap gap-4 mb-8 pb-5 border-b-2 border-slate-200">
-    <h1 class="text-2xl font-bold">Attendee Event Page</h1>
-    <a href="/attendee" class="inline-flex items-center gap-1.5 px-5 py-2 rounded-lg text-sm font-semibold border-none cursor-pointer no-underline whitespace-nowrap transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md active:translate-y-0 bg-transparent text-indigo-600 border-2 border-indigo-600 hover:bg-indigo-50">← Back to Events</a>
+<div class="flex items-start justify-between gap-4 mb-6">
+    <h1 class="text-3xl font-extrabold text-slate-800">Attendee Event Page</h1>
+    <a href="/attendee" class="inline-flex items-center border border-slate-300 text-slate-600 font-semibold text-sm px-4 py-2 rounded-lg hover:bg-slate-100 transition">← Back to Events</a>
 </div>
 
-<div class="bg-white border border-slate-200 rounded-lg p-8 mb-8 shadow-sm">
-    <h2 class="text-3xl font-extrabold mb-2"><%= event.title %></h2>
-    <div class="text-slate-500 mb-4 text-sm">
-        <span>📅 <%= formatDate(event.event_date, 'EEEE, d MMMM yyyy, HH:mm') %></span>
-    </div>
-    <p class="text-sm leading-relaxed mb-6"><%= event.description %></p>
+<!-- Event details card -->
+<div class="bg-white border border-slate-200 rounded-2xl shadow-sm p-8 mb-6">
+    <h2 class="text-2xl font-extrabold text-slate-800 mb-2"><%= event.title %></h2>
+    <p class="text-slate-400 text-sm mb-4">
+        📅 <%= new Date(event.event_date).toLocaleString('en-GB', {weekday:'long',day:'numeric',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'}) %>
+    </p>
+    <p class="text-slate-600 leading-relaxed mb-6"><%= event.description %></p>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div class="bg-indigo-50 border-2 border-indigo-600 rounded-lg p-4">
-            <div class="text-xs uppercase font-semibold text-indigo-600 mb-1">Full-Price Ticket</div>
-            <div class="text-2xl font-extrabold text-slate-800">£<%= parseFloat(event.full_price_cost).toFixed(2) %></div>
-            <div class="text-sm text-slate-500 mt-1"><%= availableFull %> available</div>
+    <!-- Ticket type cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="bg-indigo-50 border-2 border-indigo-300 rounded-xl p-5">
+            <div class="text-xs font-bold text-indigo-500 uppercase tracking-wide mb-1">Full-Price Ticket</div>
+            <div class="text-3xl font-extrabold text-slate-800">£<%= parseFloat(event.full_price_cost).toFixed(2) %></div>
+            <div class="text-sm text-slate-400 mt-1"><%= availableFull %> available</div>
         </div>
-        <div class="bg-indigo-50 border-2 border-indigo-600 rounded-lg p-4">
-            <div class="text-xs uppercase font-semibold text-indigo-600 mb-1">Concession Ticket</div>
-            <div class="text-2xl font-extrabold text-slate-800">£<%= parseFloat(event.concession_cost).toFixed(2) %></div>
-            <div class="text-sm text-slate-500 mt-1"><%= availableConcession %> available</div>
+        <div class="bg-indigo-50 border-2 border-indigo-300 rounded-xl p-5">
+            <div class="text-xs font-bold text-indigo-500 uppercase tracking-wide mb-1">Concession Ticket</div>
+            <div class="text-3xl font-extrabold text-slate-800">£<%= parseFloat(event.concession_cost).toFixed(2) %></div>
+            <div class="text-sm text-slate-400 mt-1"><%= availableConcession %> available</div>
         </div>
     </div>
 </div>
 
-<div class="bg-white border border-slate-200 rounded-lg p-8 max-w-[680px] shadow-sm mb-8">
-    <h3 class="text-lg font-bold mb-5 pb-3 border-b border-slate-200">Book Tickets</h3>
+<!-- Booking form -->
+<div class="bg-white border border-slate-200 rounded-2xl shadow-sm p-8 max-w-xl">
+    <h3 class="text-lg font-bold text-slate-800 mb-5 pb-4 border-b border-slate-100">Book Tickets</h3>
 
     <% if (errors.length > 0) { %>
-        <div class="bg-red-50 border border-red-300 text-red-900 rounded-lg px-5 py-3 mb-5 text-sm">
-            <ul class="pl-5 list-disc">
-                <% errors.forEach(err => { %>
-                    <li class="mt-1"><%= err %></li>
-                <% }); %>
+        <div class="bg-red-50 border border-red-200 text-red-800 rounded-xl p-4 mb-5">
+            <ul class="list-disc list-inside space-y-1 text-sm">
+                <% errors.forEach(function(err) { %><li><%= err %></li><% }); %>
             </ul>
         </div>
     <% } %>
 
     <% if (availableFull === 0 && availableConcession === 0) { %>
-        <div class="bg-amber-50 border border-amber-300 text-amber-900 rounded-lg px-5 py-3 mb-5 text-sm">
-            <strong>Sold Out!</strong> There are no tickets remaining for this event.
+        <div class="bg-amber-50 border border-amber-200 text-amber-800 rounded-xl p-4 font-medium">
+            🎟 <strong>Sold Out!</strong> There are no tickets remaining for this event.
         </div>
     <% } else { %>
-        <form action="/attendee/events/<%= event.id %>/book" method="POST" novalidate id="bookingForm">
+
+        <form action="/attendee/events/<%= event.id %>/book" method="POST">
 
             <div class="mb-5">
-                <label for="attendee_name" class="block text-sm font-semibold mb-1">Your Name <span class="text-red-500">*</span></label>
-                <input
-                    type="text"
-                    id="attendee_name"
-                    name="attendee_name"
-                    class="w-full px-3.5 py-2.5 border-2 border-slate-200 rounded-lg text-sm bg-white text-slate-800 focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-600/10 transition-all"
-                    placeholder="Enter your full name"
-                    required
-                />
+                <label for="attendee_name" class="block text-sm font-semibold text-slate-700 mb-1">Your Name <span class="text-red-500">*</span></label>
+                <input type="text" id="attendee_name" name="attendee_name"
+                       placeholder="Enter your full name"
+                       class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 transition" />
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div class="mb-5">
-                    <label for="full_price_qty" class="block text-sm font-semibold mb-1">
-                        Full-Price Tickets
-                        <span class="inline-block px-2 py-0.5 rounded-full text-xs font-bold bg-green-100 text-green-800"><%= availableFull %> left</span>
+            <div class="grid grid-cols-2 gap-4 mb-5">
+                <div>
+                    <label for="full_price_qty" class="block text-sm font-semibold text-slate-700 mb-1">
+                        Full-Price
+                        <span class="bg-green-100 text-green-700 text-xs font-bold px-1.5 py-0.5 rounded-full ml-1"><%= availableFull %> left</span>
                     </label>
-                    <input
-                        type="number"
-                        id="full_price_qty"
-                        name="full_price_qty"
-                        class="w-full px-3.5 py-2.5 border-2 border-slate-200 rounded-lg text-sm bg-white text-slate-800 focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-600/10 transition-all"
-                        value="0"
-                        min="0"
-                        max="<%= availableFull %>"
-                        oninput="updateTotal()"
-                    />
-                    <small class="text-xs text-slate-500 mt-1 block">£<%= parseFloat(event.full_price_cost).toFixed(2) %> each</small>
+                    <input type="number" id="full_price_qty" name="full_price_qty"
+                           value="0" min="0" max="<%= availableFull %>"
+                           oninput="updateTotal()"
+                           class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 transition" />
+                    <p class="text-xs text-slate-400 mt-1">£<%= parseFloat(event.full_price_cost).toFixed(2) %> each</p>
                 </div>
-
-                <div class="mb-5">
-                    <label for="concession_qty" class="block text-sm font-semibold mb-1">
-                        Concession Tickets
-                        <span class="inline-block px-2 py-0.5 rounded-full text-xs font-bold bg-orange-100 text-orange-800"><%= availableConcession %> left</span>
+                <div>
+                    <label for="concession_qty" class="block text-sm font-semibold text-slate-700 mb-1">
+                        Concession
+                        <span class="bg-orange-100 text-orange-700 text-xs font-bold px-1.5 py-0.5 rounded-full ml-1"><%= availableConcession %> left</span>
                     </label>
-                    <input
-                        type="number"
-                        id="concession_qty"
-                        name="concession_qty"
-                        class="w-full px-3.5 py-2.5 border-2 border-slate-200 rounded-lg text-sm bg-white text-slate-800 focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-600/10 transition-all"
-                        value="0"
-                        min="0"
-                        max="<%= availableConcession %>"
-                        oninput="updateTotal()"
-                    />
-                    <small class="text-xs text-slate-500 mt-1 block">£<%= parseFloat(event.concession_cost).toFixed(2) %> each</small>
+                    <input type="number" id="concession_qty" name="concession_qty"
+                           value="0" min="0" max="<%= availableConcession %>"
+                           oninput="updateTotal()"
+                           class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 transition" />
+                    <p class="text-xs text-slate-400 mt-1">£<%= parseFloat(event.concession_cost).toFixed(2) %> each</p>
                 </div>
             </div>
 
-            <div class="flex justify-between items-center bg-green-50 border border-green-300 rounded-lg px-4 py-3 mt-4 text-base" id="bookingTotal" style="display:none;">
-                <span>Estimated Total:</span>
-                <strong id="totalAmount" class="text-lg text-green-800">£0.00</strong>
+            <!-- Dynamic total (shown when qty > 0) -->
+            <div id="bookingTotal" class="hidden bg-green-50 border border-green-200 rounded-xl px-4 py-3 flex justify-between items-center mb-5">
+                <span class="text-sm text-slate-600">Estimated Total:</span>
+                <strong id="totalAmount" class="text-green-700 text-lg">£0.00</strong>
             </div>
 
-            <div class="flex gap-3 pt-4 mt-2 border-t border-slate-200 flex-wrap">
-                <button type="submit" class="inline-flex items-center gap-1.5 px-8 py-3 rounded-lg text-base font-semibold border-none cursor-pointer no-underline whitespace-nowrap transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md active:translate-y-0 bg-indigo-600 text-white hover:bg-indigo-800">🎟 Book Now</button>
+            <div class="pt-4 border-t border-slate-100">
+                <button type="submit" class="w-full bg-indigo-600 text-white font-bold py-3 rounded-xl hover:bg-indigo-700 transition text-sm cursor-pointer">🎟 Book Now</button>
             </div>
+
         </form>
+
     <% } %>
 </div>
 
@@ -116,15 +103,15 @@
         const fullQty = parseInt(document.getElementById('full_price_qty').value) || 0;
         const concQty = parseInt(document.getElementById('concession_qty').value)  || 0;
         const total   = (fullQty * fullPrice) + (concQty * concPrice);
-
         const totalEl = document.getElementById('bookingTotal');
-        const amountEl = document.getElementById('totalAmount');
 
         if (fullQty > 0 || concQty > 0) {
-            totalEl.style.display = 'flex';
-            amountEl.textContent  = '£' + total.toFixed(2);
+            totalEl.classList.remove('hidden');
+            totalEl.classList.add('flex');
+            document.getElementById('totalAmount').textContent = '£' + total.toFixed(2);
         } else {
-            totalEl.style.display = 'none';
+            totalEl.classList.add('hidden');
+            totalEl.classList.remove('flex');
         }
     }
 </script>

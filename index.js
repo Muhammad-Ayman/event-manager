@@ -1,73 +1,58 @@
 /**
  * index.js
- * Entry point for the Event Manager Express application.
- * Sets up middleware, database connection, and mounts route handlers.
+ * Main application entry point for the Event Manager.
+ * Sets up Express, body-parser, EJS, SQLite and mounts all route handlers.
  *
- * Run with: npm run start (after npm run build-db)
+ * Run with: npm run start  (after npm run build-db)
  */
 
-const express = require('express');
-const path = require('path');
-const sqlite3 = require('sqlite3').verbose();
-const { format, parseISO } = require('date-fns');
+// Set up express, bodyparser and EJS
+const express    = require('express');
+const app        = express();
+const port       = 3000;
+var bodyParser   = require('body-parser');
+app.use(bodyParser.urlencoded({ extended: true }));
+app.set('view engine', 'ejs');                         // use EJS for rendering
+app.use(express.static(__dirname + '/public'));         // serve static files
 
-const app = express();
-const PORT = 3000;
-
-// ─── Database Connection ──────────────────────────────────────────────────────
-// Open (or create) the SQLite database file
-const db = new sqlite3.Database(
-    path.join(__dirname, 'db', 'database.db'),
-    sqlite3.OPEN_READWRITE,
-    (err) => {
-        if (err) {
-            console.error('Could not connect to database. Run "npm run build-db" first.');
-            console.error(err.message);
-            process.exit(1);
-        }
-        console.log('Connected to SQLite database.');
+// Set up SQLite
+// Items in the global namespace are accessible throughout the node application
+let sqlite3;
+try { sqlite3 = require('sqlite3').verbose(); } catch(e) { sqlite3 = require('./sqlite3-shim').verbose(); }
+global.db = new sqlite3.Database('./database.db', function (err) {
+    if (err) {
+        console.error(err);
+        process.exit(1); // bail out — we can't connect to the DB
+    } else {
+        console.log('Database connected');
+        global.db.run('PRAGMA foreign_keys=ON'); // enforce foreign key constraints
     }
-);
-
-// Enable foreign key support for cascade deletes
-db.run('PRAGMA foreign_keys = ON');
-
-// ─── View Engine ──────────────────────────────────────────────────────────────
-app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'));
-
-// ─── Template Helpers (date-fns) ──────────────────────────────────────────────
-app.locals.formatDate = (dateStr, fmt = 'dd MMM yyyy') => {
-    if (!dateStr) return '—';
-    return format(parseISO(dateStr), fmt);
-};
-app.locals.dateFnsFormat = format;
-app.locals.dateFnsParseISO = parseISO;
-
-// ─── Middleware ───────────────────────────────────────────────────────────────
-// Parse URL-encoded form bodies
-app.use(express.urlencoded({ extended: true }));
-// Parse JSON bodies
-app.use(express.json());
-// Serve static assets (CSS, client-side JS)
-app.use(express.static(path.join(__dirname, 'public')));
-
-// Make db accessible to all route handlers via req.db
-app.use((req, res, next) => {
-    req.db = db;
-    next();
 });
 
-// ─── Routes ───────────────────────────────────────────────────────────────────
-const mainRoutes      = require('./routes/main');
-const organiserRoutes = require('./routes/organiser');
-const attendeeRoutes  = require('./routes/attendee');
+// Handle requests to the home page
+app.get('/', (req, res) => {
+    res.render('index', { title: 'Event Manager' });
+});
 
-app.use('/', mainRoutes);
+// Mount all organiser route handlers under /organiser
+const organiserRoutes = require('./routes/organiser');
 app.use('/organiser', organiserRoutes);
+
+// Mount all attendee route handlers under /attendee
+const attendeeRoutes = require('./routes/attendee');
 app.use('/attendee', attendeeRoutes);
 
-// ─── 404 Handler ─────────────────────────────────────────────────────────────
+// Global error handler — catches errors passed via next(err)
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).render('error', {
+        title: 'Server Error',
+        message: err.message || 'Something went wrong.',
+        backUrl: '/'
+    });
+});
+
+// 404 handler
 app.use((req, res) => {
     res.status(404).render('error', {
         title: '404 – Page Not Found',
@@ -76,7 +61,8 @@ app.use((req, res) => {
     });
 });
 
-// ─── Start Server ─────────────────────────────────────────────────────────────
-app.listen(PORT, () => {
-    console.log(`Event Manager running at http://localhost:${PORT}`);
+// Start the web application listening for HTTP requests
+app.listen(port, () => {
+    console.log(`Event Manager listening on port ${port}`);
+    console.log(`Open: http://localhost:${port}`);
 });
