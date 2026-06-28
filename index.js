@@ -9,6 +9,7 @@
 const express = require('express');
 const path = require('path');
 const sqlite3 = require('sqlite3').verbose();
+const { format, parseISO } = require('date-fns');
 
 const app = express();
 const PORT = 3000;
@@ -34,6 +35,14 @@ db.run('PRAGMA foreign_keys = ON');
 // ─── View Engine ──────────────────────────────────────────────────────────────
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
+
+// ─── Template Helpers (date-fns) ──────────────────────────────────────────────
+app.locals.formatDate = (dateStr, fmt = 'dd MMM yyyy') => {
+    if (!dateStr) return '—';
+    return format(parseISO(dateStr), fmt);
+};
+app.locals.dateFnsFormat = format;
+app.locals.dateFnsParseISO = parseISO;
 
 // ─── Middleware ───────────────────────────────────────────────────────────────
 // Parse URL-encoded form bodies

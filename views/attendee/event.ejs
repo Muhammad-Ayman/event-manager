@@ -9,7 +9,7 @@
 <div class="event-detail-card">
     <h2 class="event-detail-title"><%= event.title %></h2>
     <div class="event-detail-meta">
-        <span>📅 <%= new Date(event.event_date).toLocaleString('en-GB', {weekday:'long', day:'numeric', month:'long', year:'numeric', hour:'2-digit', minute:'2-digit'}) %></span>
+        <span>📅 <%= formatDate(event.event_date, 'EEEE, d MMMM yyyy, HH:mm') %></span>
     </div>
     <p class="event-detail-desc"><%= event.description %></p>
 

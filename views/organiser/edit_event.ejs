@@ -4,9 +4,9 @@
     <div>
         <h1>Organiser – Edit Event</h1>
         <p class="page-subtitle text-muted">
-            Created: <strong><%= new Date(event.created_at).toLocaleString('en-GB') %></strong>
+            Created: <strong><%= formatDate(event.created_at, 'dd/MM/yyyy, HH:mm') %></strong>
             &nbsp;|&nbsp;
-            Last modified: <strong><%= new Date(event.last_modified).toLocaleString('en-GB') %></strong>
+            Last modified: <strong><%= formatDate(event.last_modified, 'dd/MM/yyyy, HH:mm') %></strong>
         </p>
     </div>
     <a href="/organiser" class="btn btn-outline">← Back to Organiser Home</a>

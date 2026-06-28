@@ -4,7 +4,7 @@
     <div>
         <h1>Bookings – <%= event.title %></h1>
         <p class="page-subtitle text-muted">
-            Event date: <strong><%= event.event_date ? new Date(event.event_date).toLocaleString('en-GB') : '—' %></strong>
+            Event date: <strong><%= formatDate(event.event_date, 'dd/MM/yyyy, HH:mm') %></strong>
         </p>
     </div>
     <a href="/organiser" class="btn btn-outline">← Back to Organiser Home</a>
@@ -78,7 +78,7 @@
                         <td><%= b.full_price_tickets %></td>
                         <td><%= b.concession_tickets %></td>
                         <td>£<%= ((b.full_price_tickets * event.full_price_cost) + (b.concession_tickets * event.concession_cost)).toFixed(2) %></td>
-                        <td class="date-small"><%= new Date(b.booked_at).toLocaleString('en-GB') %></td>
+                        <td class="date-small"><%= formatDate(b.booked_at, 'dd/MM/yyyy, HH:mm') %></td>
                     </tr>
                 <% }); %>
                 </tbody>

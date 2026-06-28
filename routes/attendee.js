@@ -7,6 +7,7 @@
 
 const express = require('express');
 const router = express.Router();
+const { bookingSchema } = require('../validators');
 
 // ─────────────────────────────────────────────────────────────────────────────
 // ATTENDEE HOME PAGE
@@ -125,10 +126,8 @@ router.post('/events/:id/book', (req, res) => {
                 const availableFull       = event.full_price_tickets - booked.booked_full;
                 const availableConcession = event.concession_tickets  - booked.booked_concession;
 
-                // Validate booking inputs
-                const errors = [];
-                if (!attendee_name || attendee_name.trim() === '') errors.push('Please enter your name.');
-                if (fullQty < 0 || concQty < 0)                    errors.push('Ticket quantities cannot be negative.');
+                            const { error: validationError } = bookingSchema.validate({ attendee_name, full_price_qty: fullQty, concession_qty: concQty }, { abortEarly: false });
+                const errors = validationError ? validationError.details.map(e => e.message) : [];
                 if (fullQty === 0 && concQty === 0)                 errors.push('Please select at least one ticket.');
                 if (fullQty > availableFull)                        errors.push(`Only ${availableFull} full-price ticket(s) remaining.`);
                 if (concQty > availableConcession)                  errors.push(`Only ${availableConcession} concession ticket(s) remaining.`);

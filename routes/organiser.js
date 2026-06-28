@@ -8,6 +8,7 @@
 
 const express = require('express');
 const router = express.Router();
+const { settingsSchema, eventSchema } = require('../validators');
 
 // ─────────────────────────────────────────────────────────────────────────────
 // ORGANISER HOME PAGE
@@ -98,12 +99,9 @@ router.post('/settings', (req, res) => {
     const db = req.db;
     const { name, description } = req.body;
 
-    // Validate: both fields must be non-empty
-    const errors = [];
-    if (!name || name.trim() === '') errors.push('Site name is required.');
-    if (!description || description.trim() === '') errors.push('Site description is required.');
-
-    if (errors.length > 0) {
+    const { error } = settingsSchema.validate({ name, description }, { abortEarly: false });
+    if (error) {
+        const errors = error.details.map(e => e.message);
         return res.render('organiser/settings', {
             title: 'Site Settings',
             settings: { name, description },
@@ -197,16 +195,14 @@ router.post('/events/:id/edit', (req, res) => {
         concession_tickets, concession_cost
     } = req.body;
 
-    // Validate inputs
-    const errors = [];
-    if (!title || title.trim() === '')        errors.push('Event title is required.');
-    if (!event_date || event_date.trim() === '') errors.push('Event date is required.');
-    if (isNaN(parseInt(full_price_tickets)) || parseInt(full_price_tickets) < 0) errors.push('Full-price ticket count must be a non-negative number.');
-    if (isNaN(parseFloat(full_price_cost))  || parseFloat(full_price_cost)  < 0) errors.push('Full-price ticket price must be a non-negative number.');
-    if (isNaN(parseInt(concession_tickets)) || parseInt(concession_tickets) < 0) errors.push('Concession ticket count must be a non-negative number.');
-    if (isNaN(parseFloat(concession_cost))  || parseFloat(concession_cost)  < 0) errors.push('Concession ticket price must be a non-negative number.');
+    const { error } = eventSchema.validate({
+        title, description, event_date,
+        full_price_tickets, full_price_cost,
+        concession_tickets, concession_cost
+    }, { abortEarly: false });
 
-    if (errors.length > 0) {
+    if (error) {
+        const errors = error.details.map(e => e.message);
         return res.render('organiser/edit_event', {
             title: 'Edit Event',
             event: { id, title, description, event_date, full_price_tickets, full_price_cost, concession_tickets, concession_cost },

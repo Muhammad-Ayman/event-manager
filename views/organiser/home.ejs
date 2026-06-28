@@ -40,9 +40,9 @@
                 <% publishedEvents.forEach(event => { %>
                     <tr>
                         <td><strong><%= event.title %></strong></td>
-                        <td><%= event.event_date ? new Date(event.event_date).toLocaleDateString('en-GB', {day:'numeric',month:'short',year:'numeric'}) : '—' %></td>
-                        <td class="date-small"><%= new Date(event.created_at).toLocaleDateString('en-GB') %></td>
-                        <td class="date-small"><%= event.published_at ? new Date(event.published_at).toLocaleDateString('en-GB') : '—' %></td>
+                        <td><%= formatDate(event.event_date, 'd MMM yyyy') %></td>
+                        <td class="date-small"><%= formatDate(event.created_at, 'dd/MM/yyyy') %></td>
+                        <td class="date-small"><%= formatDate(event.published_at, 'dd/MM/yyyy') %></td>
                         <td>
                             <span class="ticket-info">
                                 <%= event.booked_full %> / <%= event.full_price_tickets %> booked
@@ -100,9 +100,9 @@
                 <% draftEvents.forEach(event => { %>
                     <tr>
                         <td><strong><%= event.title %></strong></td>
-                        <td><%= event.event_date ? new Date(event.event_date).toLocaleDateString('en-GB', {day:'numeric',month:'short',year:'numeric'}) : '—' %></td>
-                        <td class="date-small"><%= new Date(event.created_at).toLocaleDateString('en-GB') %></td>
-                        <td class="date-small"><%= new Date(event.last_modified).toLocaleDateString('en-GB') %></td>
+                        <td><%= formatDate(event.event_date, 'd MMM yyyy') %></td>
+                        <td class="date-small"><%= formatDate(event.created_at, 'dd/MM/yyyy') %></td>
+                        <td class="date-small"><%= formatDate(event.last_modified, 'dd/MM/yyyy') %></td>
                         <td>
                             <%= event.full_price_tickets %> available
                             <small>(£<%= parseFloat(event.full_price_cost).toFixed(2) %>)</small>
